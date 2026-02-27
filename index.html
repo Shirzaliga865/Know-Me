@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <title>Know Me | דע - אותי</title>
+    
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
@@ -16,7 +17,7 @@
             --shot-color: #ffd166;
         }
 
-        /* Essential mobile fix: Use dvh for dynamic height */
+        /* Essential mobile fix: Ensure the app fits exactly into the screen */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
@@ -25,35 +26,37 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            height: 100dvh; /* Dynamic Viewport Height */
+            /* Using dvh (Dynamic Viewport Height) for mobile browser bars */
+            height: 100vh;
+            height: 100dvh; 
             margin: 0;
-            padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
+            padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom) 10px;
             box-sizing: border-box;
-            overflow: hidden; /* Prevents unwanted scrolling */
-            touch-action: manipulation; /* Faster taps on mobile */
+            overflow: hidden;
+            touch-action: manipulation;
         }
 
-        /* Shot Counter Layout */
+        /* Shot Counter - Compact for mobile */
         .shot-counter {
             background: rgba(255, 255, 255, 0.05);
-            padding: 8px 15px;
-            border-radius: 15px;
+            padding: 5px 15px;
+            border-radius: 12px;
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-sizing: border-box;
+            height: 50px;
         }
 
         .player-top { transform: rotate(180deg); }
 
-        .shot-display { font-size: 1.4rem; letter-spacing: 3px; }
+        .shot-display { font-size: 1.2rem; letter-spacing: 2px; }
 
         .shot-glass {
             opacity: 0.2;
             transition: all 0.3s ease;
-            display: inline-block;
         }
 
         .shot-glass.filled {
@@ -61,72 +64,68 @@
             filter: drop-shadow(0 0 5px var(--shot-color));
         }
 
-        /* Main Content Container */
         .container {
             width: 100%;
-            max-width: 450px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            flex-grow: 1;
+            gap: 15px;
         }
 
-        h1 { color: var(--accent); margin: 5px 0; font-size: 1.8rem; }
+        h1 { color: var(--accent); margin: 0; font-size: 1.6rem; }
+
+        .dice-roll { font-size: 2.8rem; line-height: 1; }
 
         .category-badge {
-            display: inline-block;
-            padding: 6px 15px;
+            padding: 5px 15px;
             border-radius: 20px;
             font-weight: bold;
             background: var(--accent);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .question-card {
             background: var(--card);
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            min-height: 130px;
-            max-height: 30vh; /* Prevents card from taking too much space */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            min-height: 120px;
+            max-height: 25vh; /* Prevents overflow on small screens */
+            width: 100%;
+            max-width: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             border: 1px solid #444;
-            width: 100%;
             box-sizing: border-box;
-            overflow-y: auto; /* Allow scrolling inside card if text is long */
+            overflow-y: auto;
         }
 
         .btn-main {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 12px 35px;
+            font-size: 1.1rem;
             border-radius: 50px;
-            cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
-            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
         }
 
         .btn-shot {
             background: var(--shot-color);
-            color: #000;
             border: none;
-            width: 35px;
-            height: 35px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             font-weight: bold;
-            font-size: 1.2rem;
             cursor: pointer;
         }
 
-        .dice-roll { font-size: 3rem; margin: 0; }
-        .shot-msg { color: var(--shot-color); font-weight: bold; font-size: 1.6rem; }
+        .shot-msg { color: var(--shot-color); font-weight: bold; font-size: 1.5rem; }
     </style>
 </head>
 <body>
@@ -141,7 +140,7 @@
         <h1>דע - אותי</h1>
         <div id="diceDisplay" class="dice-roll">🎲</div>
         <div id="categoryDisplay" class="category-badge">לחצו להתחלה</div>
-        <div id="questionDisplay" class="question-card">מוכנים לגלות אחד את השנייה?</div>
+        <div id="questionDisplay" class="question-card">מוכנים?</div>
         <button class="btn-main" onclick="play()">הטל קובייה!</button>
     </div>
 
