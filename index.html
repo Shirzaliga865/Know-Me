@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דע - אותי! | המשחק הזוגי</title>
+    <style>
+        :root {
+            --bg: #1a1a1a;
+            --card: #2d2d2d;
+            --accent: #ff4d6d;
+            --text: #f0f0f0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { color: var(--accent); margin-bottom: 10px; }
+        .category-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: var(--accent);
+        }
+        .question-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            border: 1px solid #444;
+        }
+        button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+        }
+        button:active { transform: scale(0.95); }
+        .dice-roll { font-size: 3rem; margin-bottom: 10px; }
+        .shot-msg { color: #ffd166; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>דע - אותי!</h1>
+    <div id="diceDisplay" class="dice-roll">🎲</div>
+    <div id="categoryDisplay" class="category-badge">לחצו להתחלה</div>
+    <div id="questionDisplay" class="question-card">מוכנים לגלות אחד את השנייה?</div>
+    <button onclick="play()">הטל קובייה!</button>
+</div>
+
+<script>
+    const data = {
+        1: { name: "הכרות עמוקה", questions: ["מהי התכונה שהכי קשה לך לקבל?", "מה גורם לך להרגיש חיים באמת?", "מה ההרגל הכי מוזר שלך?", "מהי שפת האהבה שלך?", "מה הכי מרגיע אותך כשאתה לחוץ?", "מהו הפחד הכי לא רציונלי שלך?", "מה היית שואל את אלוהים?", "האם אתה מאמין בנשמות תאומות?"] },
+        2: { name: "מסע בזמן", questions: ["אילו פצעים מהעבר עדיין משפיעים עליך?", "מי השפיע עליך הכי הרבה?", "מהו זיכרון הילדות האהוב עליך?", "מה הדבר הכי מביך שקרה לך?", "מה ההישג שאתה הכי גאה בו?", "מה הטעות הכי טובה שעשית?"] },
+        3: { name: "הקשר שלנו", questions: ["מה הדבר שאני עושה שגורם לך להרגיש אהוב?", "מה הרושם הראשוני שהיה לך עלי?", "איזו תכונה שלי היית רוצה לאמץ?", "מהו הרגע שבו הרגשת הכי קרוב אלי?", "מה הדבר שגורם לך להרגיש בטוח איתי?"] },
+        4: { name: "מיניות", questions: ["ספר על פנטזיה מינית שיש לך", "מה הכי מדליק אותך אצלי?", "תאר במילים מה היית רוצה לעשות לי עכשיו", "מה התנוחה האהובה עליך?", "איפה המקום הכי נועז שתרצה לעשות בו סקס?", "סקס עם גרביים - כן או לא?"] }
+    };
+
+    const diceIcons = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+
+    function play() {
+        const roll = Math.floor(Math.random() * 6) + 1;
+        document.getElementById('diceDisplay').innerText = diceIcons[roll];
+        
+        const qDisplay = document.getElementById('questionDisplay');
+        const cDisplay = document.getElementById('categoryDisplay');
+
+        if (roll <= 4) {
+            const category = data[roll];
+            const randomQ = category.questions[Math.floor(Math.random() * category.questions.length)];
+            cDisplay.innerText = category.name;
+            cDisplay.style.background = "#ff4d6d";
+            qDisplay.innerText = randomQ;
+        } else {
+            cDisplay.innerText = "זמן לשוט! 🥃";
+            cDisplay.style.background = "#ffd166";
+            qDisplay.innerHTML = "<span class='shot-msg'>שותים שוט!</span><br>ובונוס: בחר/י שאלה מכל קטגוריה שבא לך.";
+        }
+    }
+</script>
+</body>
+</html>
