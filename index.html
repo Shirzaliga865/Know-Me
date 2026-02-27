@@ -2,14 +2,13 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>Know Me | דע - אותי</title>
     
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
-        /* CSS Variables for consistent styling */
         :root {
             --bg: #1a1a1a;
             --card: #2d2d2d;
@@ -18,7 +17,6 @@
             --shot-color: #ffd166;
         }
 
-        /* Basic Layout & Background */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
@@ -26,25 +24,58 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
             text-align: center;
+            overflow: hidden;
         }
 
         .container {
             max-width: 500px;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
         }
 
-        h1 { 
-            color: var(--accent); 
-            margin-bottom: 10px; 
-            font-size: 2.5rem;
+        /* Shot Counter Styling */
+        .shot-counter {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
+            border-radius: 15px;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Category Label Styling */
+        /* Upside down counter for the opposite player */
+        .player-top {
+            transform: rotate(180deg);
+        }
+
+        .shot-display {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+        }
+
+        .shot-glass {
+            opacity: 0.2;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .shot-glass.filled {
+            opacity: 1;
+            filter: drop-shadow(0 0 5px var(--shot-color));
+        }
+
+        h1 { color: var(--accent); margin: 10px 0; font-size: 2rem; }
+
         .category-badge {
             display: inline-block;
             padding: 8px 20px;
@@ -53,130 +84,137 @@
             margin-bottom: 15px;
             background: var(--accent);
             min-width: 140px;
-            transition: background 0.3s ease;
         }
 
-        /* Main Question Display Card */
         .question-card {
             background: var(--card);
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            min-height: 160px;
+            min-height: 140px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 35px;
+            font-size: 1.4rem;
+            margin-bottom: 25px;
             border: 1px solid #444;
-            transition: transform 0.2s ease;
+            width: 90%;
         }
 
-        /* Main Action Button */
-        button {
+        .btn-main {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 18px 45px;
-            font-size: 1.3rem;
+            padding: 15px 40px;
+            font-size: 1.2rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.2s;
             box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
         }
 
-        button:active { 
-            transform: scale(0.95); 
+        .btn-shot {
+            background: var(--shot-color);
+            color: #000;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
         }
 
-        .dice-roll { 
-            font-size: 3.5rem; 
-            margin-bottom: 15px; 
-        }
-
-        /* Shot message specific styling */
-        .shot-msg { 
-            color: var(--shot-color); 
-            font-weight: bold; 
-            font-size: 2.2rem; 
-        }
+        .dice-roll { font-size: 3rem; margin-bottom: 10px; }
+        .shot-msg { color: var(--shot-color); font-weight: bold; font-size: 1.8rem; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>דע - אותי!</h1>
-    <div id="diceDisplay" class="dice-roll">🎲</div>
-    <div id="categoryDisplay" class="category-badge">לחצו להתחלה</div>
-    <div id="questionDisplay" class="question-card">מוכנים לגלות אחד את השנייה?</div>
-    <button onclick="play()">הטל קובייה!</button>
-</div>
+    <div class="shot-counter player-top">
+        <button class="btn-shot" onclick="addShot(2)">+</button>
+        <div id="shots-p2" class="shot-display">🥃🥃🥃🥃🥃</div>
+        <button class="btn-shot" onclick="resetShots(2)">↺</button>
+    </div>
+
+    <div class="container">
+        <h1>דע - אותי</h1>
+        <div id="diceDisplay" class="dice-roll">🎲</div>
+        <div id="categoryDisplay" class="category-badge">לחצו להתחלה</div>
+        <div id="questionDisplay" class="question-card">מוכנים לגלות אחד את השנייה?</div>
+        <button class="btn-main" onclick="play()">הטל קובייה!</button>
+    </div>
+
+    <div class="shot-counter">
+        <button class="btn-shot" onclick="addShot(1)">+</button>
+        <div id="shots-p1" class="shot-display">🥃🥃🥃🥃🥃</div>
+        <button class="btn-shot" onclick="resetShots(1)">↺</button>
+    </div>
 
 <script>
-    /* Game Content Database */
     const data = {
-        1: { 
-            name: "הכרות עמוקה", 
-            questions: ["מהי התכונה שהכי קשה לך לקבל באנשים?", "מה גורם לך להרגיש חיים באמת?", "מה ההרגל הכי מוזר שלך?", "מהי שפת האהבה שלך?", "מה הכי מרגיע אותך כשאתה לחוץ?", "מהו הפחד הכי לא רציונלי שלך?", "מה היית שואל את אלוהים?", "האם אתה מאמין בנשמות תאומות?", "מה הדבר שהכי קשה לך לסלוח עליו?", "איזו סיטואציה גרמה לך להרגיש הכי אמיץ?"] 
-        },
-        2: { 
-            name: "מסע בזמן", 
-            questions: ["אילו פצעים מהעבר עדיין משפיעים עליך?", "מי השפיע עליך הכי הרבה בחיים?", "מהו זיכרון הילדות האהוב עליך?", "מה הדבר הכי מביך שקרה לך?", "מה ההישג שאתה הכי גאה בו?", "מה הטעות הכי טובה שעשית?", "אם היית יכול לתת עצה לעצמך בגיל 20, מה היא היתה?"] 
-        },
-        3: { 
-            name: "הקשר שלנו", 
-            questions: ["מה הדבר שאני עושה שגורם לך להרגיש אהוב?", "מה הרושם הראשוני שהיה לך עלי?", "איזו תכונה שלי היית רוצה לאמץ?", "מהו הרגע שבו הרגשת הכי קרוב אלי?", "מה הדבר שגורם לך להרגיש בטוח איתי?", "מה היית רוצה שישאלו אותך יותר?", "איזו הרפתקה היית רוצה שנעשה יחד?"] 
-        },
-        4: { 
-            name: "מיניות", 
-            questions: ["ספר על פנטזיה מינית שיש לך", "מה הכי מדליק אותך אצלי?", "תאר במילים מה היית רוצה לעשות לי עכשיו", "מה התנוחה האהובה עליך ולמה?", "איפה המקום הכי נועז שתרצה לעשות בו סקס?", "סקס עם גרביים - כן או לא?", "מה המחשבה הכי פרועה שעברה לך בראש לגבינו לאחרונה?", "איך אתה מעדיף שייזמו איתך?"] 
-        }
+        1: { name: "הכרות עמוקה", questions: ["מהי התכונה שהכי קשה לך לקבל באנשים?", "מה גורם לך להרגיש חיים באמת?", "מה ההרגל הכי מוזר שלך?", "מהי שפת האהבה שלך?", "מה הכי מרגיע אותך כשאתה לחוץ?", "מהו הפחד הכי לא רציונלי שלך?", "מה היית שואל את אלוהים?", "האם אתה מאמין בנשמות תאומות?", "מה הדבר שהכי קשה לך לסלוח עליו?", "איזו סיטואציה גרמה לך להרגיש הכי אמיץ?"] },
+        2: { name: "מסע בזמן", questions: ["אילו פצעים מהעבר עדיין משפיעים עליך?", "מי השפיע עליך הכי הרבה בחיים?", "מהו זיכרון הילדות האהוב עליך?", "מה הדבר הכי מביך שקרה לך?", "מה ההישג שאתה הכי גאה בו?", "מה הטעות הכי טובה שעשית?", "אם היית יכול לתת עצה לעצמך בגיל 20, מה היא היתה?"] },
+        3: { name: "הקשר שלנו", questions: ["מה הדבר שאני עושה שגורם לך להרגיש אהוב?", "מה הרושם הראשוני שהיה לך עלי?", "איזו תכונה שלי היית רוצה לאמץ?", "מהו הרגע שבו הרגשת הכי קרוב אלי?", "מה הדבר שגורם לך להרגיש בטוח איתי?", "מה היית רוצה שישאלו אותך יותר?", "איזו הרפתקה היית רוצה שנעשה יחד?"] },
+        4: { name: "מיניות", questions: ["ספר על פנטזיה מינית שיש לך", "מה הכי מדליק אותך אצלי?", "תאר במילים מה היית רוצה לעשות לי עכשיו", "מה התנוחה האהובה עליך ולמה?", "איפה המקום הכי נועז שתרצה לעשות בו סקס?", "סקס עם גרביים - כן או לא?", "מה המחשבה הכי פרועה שעברה לך בראש לגבינו לאחרונה?", "איך אתה מעדיף שייזמו איתך?"] }
     };
 
-    /* Tracking used questions to ensure zero repetition per category */
     const usedQuestions = { 1: [], 2: [], 3: [], 4: [] };
-    
-    /* Unicode dice icons for visual feedback */
     const diceIcons = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+    
+    // Shot tracking state
+    let scores = { 1: 0, 2: 0 };
+    const maxShots = 5;
 
-    /**
-     * Handles the dice roll logic and UI updates
-     */
+    // Initialize shot displays
+    function updateShotUI(player) {
+        const container = document.getElementById(`shots-p${player}`);
+        let html = "";
+        for (let i = 1; i <= maxShots; i++) {
+            const filledClass = i <= scores[player] ? "filled" : "";
+            html += `<span class="shot-glass ${filledClass}">🥃</span>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function addShot(player) {
+        if (scores[player] < maxShots) {
+            scores[player]++;
+            updateShotUI(player);
+        }
+    }
+
+    function resetShots(player) {
+        scores[player] = 0;
+        updateShotUI(player);
+    }
+
+    // Initialize UI on load
+    updateShotUI(1);
+    updateShotUI(2);
+
     function play() {
-        // Roll a random number between 1 and 6
         const roll = Math.floor(Math.random() * 6) + 1;
         document.getElementById('diceDisplay').innerText = diceIcons[roll];
         
         const qDisplay = document.getElementById('questionDisplay');
         const cDisplay = document.getElementById('categoryDisplay');
 
-        // Roll 1-4: Show a unique question from the corresponding category
         if (roll <= 4) {
             const category = data[roll];
-            
-            // If all questions in this category have been used, reset the tracker
             if (usedQuestions[roll].length === category.questions.length) {
                 usedQuestions[roll] = [];
             }
-
-            // Find a random question index that hasn't been used yet
             let randomIndex;
             do {
                 randomIndex = Math.floor(Math.random() * category.questions.length);
             } while (usedQuestions[roll].includes(randomIndex));
 
-            // Mark the index as used
             usedQuestions[roll].push(randomIndex);
-
-            // Display the question and update the category badge
-            const randomQ = category.questions[randomIndex];
             cDisplay.innerText = category.name;
             cDisplay.style.background = "#ff4d6d";
-            qDisplay.innerText = randomQ;
-            
+            qDisplay.innerText = category.questions[randomIndex];
         } else {
-            // Roll 5-6: Trigger the Shot event
             cDisplay.innerText = "זמן לשוט! 🥃";
             cDisplay.style.background = "#ffd166"; 
             qDisplay.innerHTML = "<span class='shot-msg'>שותים שוט! 🥃</span>";
