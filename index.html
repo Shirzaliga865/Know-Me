@@ -2,10 +2,9 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <title>Know Me | דע - אותי</title>
-    
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
@@ -17,6 +16,7 @@
             --shot-color: #ffd166;
         }
 
+        /* Essential mobile fix: Use dvh for dynamic height */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
@@ -25,43 +25,30 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            min-height: 100vh;
+            height: 100dvh; /* Dynamic Viewport Height */
             margin: 0;
-            padding: 20px;
-            text-align: center;
-            overflow: hidden;
+            padding: env(safe-area-inset-top) 15px env(safe-area-inset-bottom) 15px;
+            box-sizing: border-box;
+            overflow: hidden; /* Prevents unwanted scrolling */
+            touch-action: manipulation; /* Faster taps on mobile */
         }
 
-        .container {
-            max-width: 500px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-        }
-
-        /* Shot Counter Styling */
+        /* Shot Counter Layout */
         .shot-counter {
             background: rgba(255, 255, 255, 0.05);
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 15px;
-            width: 90%;
+            width: 100%;
+            max-width: 400px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-sizing: border-box;
         }
 
-        /* Upside down counter for the opposite player */
-        .player-top {
-            transform: rotate(180deg);
-        }
+        .player-top { transform: rotate(180deg); }
 
-        .shot-display {
-            font-size: 1.5rem;
-            letter-spacing: 5px;
-        }
+        .shot-display { font-size: 1.4rem; letter-spacing: 3px; }
 
         .shot-glass {
             opacity: 0.2;
@@ -74,31 +61,43 @@
             filter: drop-shadow(0 0 5px var(--shot-color));
         }
 
-        h1 { color: var(--accent); margin: 10px 0; font-size: 2rem; }
+        /* Main Content Container */
+        .container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h1 { color: var(--accent); margin: 5px 0; font-size: 1.8rem; }
 
         .category-badge {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 6px 15px;
             border-radius: 20px;
             font-weight: bold;
-            margin-bottom: 15px;
             background: var(--accent);
-            min-width: 140px;
+            font-size: 0.9rem;
         }
 
         .question-card {
             background: var(--card);
-            padding: 30px;
+            padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            min-height: 140px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            min-height: 130px;
+            max-height: 30vh; /* Prevents card from taking too much space */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 25px;
+            font-size: 1.3rem;
             border: 1px solid #444;
-            width: 90%;
+            width: 100%;
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow scrolling inside card if text is long */
         }
 
         .btn-main {
@@ -111,6 +110,7 @@
             cursor: pointer;
             font-weight: bold;
             box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn-shot {
@@ -125,15 +125,15 @@
             cursor: pointer;
         }
 
-        .dice-roll { font-size: 3rem; margin-bottom: 10px; }
-        .shot-msg { color: var(--shot-color); font-weight: bold; font-size: 1.8rem; }
+        .dice-roll { font-size: 3rem; margin: 0; }
+        .shot-msg { color: var(--shot-color); font-weight: bold; font-size: 1.6rem; }
     </style>
 </head>
 <body>
 
     <div class="shot-counter player-top">
         <button class="btn-shot" onclick="addShot(2)">+</button>
-        <div id="shots-p2" class="shot-display">🥃🥃🥃🥃🥃</div>
+        <div id="shots-p2" class="shot-display"></div>
         <button class="btn-shot" onclick="resetShots(2)">↺</button>
     </div>
 
@@ -147,7 +147,7 @@
 
     <div class="shot-counter">
         <button class="btn-shot" onclick="addShot(1)">+</button>
-        <div id="shots-p1" class="shot-display">🥃🥃🥃🥃🥃</div>
+        <div id="shots-p1" class="shot-display"></div>
         <button class="btn-shot" onclick="resetShots(1)">↺</button>
     </div>
 
@@ -161,12 +161,9 @@
 
     const usedQuestions = { 1: [], 2: [], 3: [], 4: [] };
     const diceIcons = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-    
-    // Shot tracking state
     let scores = { 1: 0, 2: 0 };
     const maxShots = 5;
 
-    // Initialize shot displays
     function updateShotUI(player) {
         const container = document.getElementById(`shots-p${player}`);
         let html = "";
@@ -189,27 +186,22 @@
         updateShotUI(player);
     }
 
-    // Initialize UI on load
     updateShotUI(1);
     updateShotUI(2);
 
     function play() {
         const roll = Math.floor(Math.random() * 6) + 1;
         document.getElementById('diceDisplay').innerText = diceIcons[roll];
-        
         const qDisplay = document.getElementById('questionDisplay');
         const cDisplay = document.getElementById('categoryDisplay');
 
         if (roll <= 4) {
             const category = data[roll];
-            if (usedQuestions[roll].length === category.questions.length) {
-                usedQuestions[roll] = [];
-            }
+            if (usedQuestions[roll].length === category.questions.length) usedQuestions[roll] = [];
             let randomIndex;
             do {
                 randomIndex = Math.floor(Math.random() * category.questions.length);
             } while (usedQuestions[roll].includes(randomIndex));
-
             usedQuestions[roll].push(randomIndex);
             cDisplay.innerText = category.name;
             cDisplay.style.background = "#ff4d6d";
