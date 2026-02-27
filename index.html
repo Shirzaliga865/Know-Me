@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דע - אותי! | המשחק הזוגי</title>
+    <title>דע - אותי! | Know Me!</title>
     <style>
+        /* CSS Variables for easy theme management */
         :root {
             --bg: #1a1a1a;
             --card: #2d2d2d;
             --accent: #ff4d6d;
             --text: #f0f0f0;
+            --shot-color: #ffd166;
         }
+
+        /* Basic Layout & Typography */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
@@ -24,47 +28,74 @@
             padding: 20px;
             text-align: center;
         }
+
         .container {
             max-width: 500px;
             width: 100%;
         }
-        h1 { color: var(--accent); margin-bottom: 10px; }
+
+        h1 { 
+            color: var(--accent); 
+            margin-bottom: 10px; 
+            font-size: 2.5rem;
+        }
+
+        /* Styling for the category indicator */
         .category-badge {
             display: inline-block;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 20px;
             font-weight: bold;
             margin-bottom: 15px;
             background: var(--accent);
+            min-width: 140px;
+            transition: background 0.3s ease;
         }
+
+        /* The main display for questions */
         .question-card {
             background: var(--card);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            min-height: 150px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            min-height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 30px;
+            font-size: 1.5rem;
+            margin-bottom: 35px;
             border: 1px solid #444;
+            transition: transform 0.2s ease;
         }
+
+        /* Button styling */
         button {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
+            padding: 18px 45px;
+            font-size: 1.3rem;
             border-radius: 50px;
             cursor: pointer;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: all 0.2s;
             box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
         }
-        button:active { transform: scale(0.95); }
-        .dice-roll { font-size: 3rem; margin-bottom: 10px; }
-        .shot-msg { color: #ffd166; font-weight: bold; }
+
+        button:active { 
+            transform: scale(0.95); 
+        }
+
+        .dice-roll { 
+            font-size: 3.5rem; 
+            margin-bottom: 15px; 
+        }
+
+        .shot-msg { 
+            color: var(--shot-color); 
+            font-weight: bold; 
+            font-size: 2rem; 
+        }
     </style>
 </head>
 <body>
@@ -78,32 +109,72 @@
 </div>
 
 <script>
+    /* Game Content Data */
     const data = {
-        1: { name: "הכרות עמוקה", questions: ["מהי התכונה שהכי קשה לך לקבל?", "מה גורם לך להרגיש חיים באמת?", "מה ההרגל הכי מוזר שלך?", "מהי שפת האהבה שלך?", "מה הכי מרגיע אותך כשאתה לחוץ?", "מהו הפחד הכי לא רציונלי שלך?", "מה היית שואל את אלוהים?", "האם אתה מאמין בנשמות תאומות?"] },
-        2: { name: "מסע בזמן", questions: ["אילו פצעים מהעבר עדיין משפיעים עליך?", "מי השפיע עליך הכי הרבה?", "מהו זיכרון הילדות האהוב עליך?", "מה הדבר הכי מביך שקרה לך?", "מה ההישג שאתה הכי גאה בו?", "מה הטעות הכי טובה שעשית?"] },
-        3: { name: "הקשר שלנו", questions: ["מה הדבר שאני עושה שגורם לך להרגיש אהוב?", "מה הרושם הראשוני שהיה לך עלי?", "איזו תכונה שלי היית רוצה לאמץ?", "מהו הרגע שבו הרגשת הכי קרוב אלי?", "מה הדבר שגורם לך להרגיש בטוח איתי?"] },
-        4: { name: "מיניות", questions: ["ספר על פנטזיה מינית שיש לך", "מה הכי מדליק אותך אצלי?", "תאר במילים מה היית רוצה לעשות לי עכשיו", "מה התנוחה האהובה עליך?", "איפה המקום הכי נועז שתרצה לעשות בו סקס?", "סקס עם גרביים - כן או לא?"] }
+        1: { 
+            name: "הכרות עמוקה", 
+            questions: ["מהי התכונה שהכי קשה לך לקבל באנשים?", "מה גורם לך להרגיש חיים באמת?", "מה ההרגל הכי מוזר שלך?", "מהי שפת האהבה שלך?", "מה הכי מרגיע אותך כשאתה לחוץ?", "מהו הפחד הכי לא רציונלי שלך?", "מה היית שואל את אלוהים?", "האם אתה מאמין בנשמות תאומות?", "מה הדבר שהכי קשה לך לסלוח עליו?", "איזו סיטואציה גרמה לך להרגיש הכי אמיץ?"] 
+        },
+        2: { 
+            name: "מסע בזמן", 
+            questions: ["אילו פצעים מהעבר עדיין משפיעים עליך?", "מי השפיע עליך הכי הרבה בחיים?", "מהו זיכרון הילדות האהוב עליך?", "מה הדבר הכי מביך שקרה לך?", "מה ההישג שאתה הכי גאה בו?", "מה הטעות הכי טובה שעשית?", "אם היית יכול לתת עצה לעצמך בגיל 20, מה היא היתה?"] 
+        },
+        3: { 
+            name: "הקשר שלנו", 
+            questions: ["מה הדבר שאני עושה שגורם לך להרגיש אהוב?", "מה הרושם הראשוני שהיה לך עלי?", "איזו תכונה שלי היית רוצה לאמץ?", "מהו הרגע שבו הרגשת הכי קרוב אלי?", "מה הדבר שגורם לך להרגיש בטוח איתי?", "מה היית רוצה שישאלו אותך יותר?", "איזו הרפתקה היית רוצה שנעשה יחד?"] 
+        },
+        4: { 
+            name: "מיניות", 
+            questions: ["ספר על פנטזיה מינית שיש לך", "מה הכי מדליק אותך אצלי?", "תאר במילים מה היית רוצה לעשות לי עכשיו", "מה התנוחה האהובה עליך ולמה?", "איפה המקום הכי נועז שתרצה לעשות בו סקס?", "סקס עם גרביים - כן או לא?", "מה המחשבה הכי פרועה שעברה לך בראש לגבינו לאחרונה?", "איך אתה מעדיף שייזמו איתך?"] 
+        }
     };
 
+    /* Memory object to track shown questions per category to prevent repetition */
+    const usedQuestions = { 1: [], 2: [], 3: [], 4: [] };
+    
+    /* Visual dice representation */
     const diceIcons = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
+    /**
+     * The main game logic function
+     */
     function play() {
+        // Roll a dice (1 to 6)
         const roll = Math.floor(Math.random() * 6) + 1;
         document.getElementById('diceDisplay').innerText = diceIcons[roll];
         
         const qDisplay = document.getElementById('questionDisplay');
         const cDisplay = document.getElementById('categoryDisplay');
 
+        // Handles categories 1 through 4
         if (roll <= 4) {
             const category = data[roll];
-            const randomQ = category.questions[Math.floor(Math.random() * category.questions.length)];
+            
+            // If all questions in this category were used, reset the pool
+            if (usedQuestions[roll].length === category.questions.length) {
+                usedQuestions[roll] = [];
+            }
+
+            // Pick a random index that hasn't been used yet
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * category.questions.length);
+            } while (usedQuestions[roll].includes(randomIndex));
+
+            // Record this index as used
+            usedQuestions[roll].push(randomIndex);
+
+            // Update UI with the selected question
+            const randomQ = category.questions[randomIndex];
             cDisplay.innerText = category.name;
             cDisplay.style.background = "#ff4d6d";
             qDisplay.innerText = randomQ;
+            
         } else {
+            // Handles rolls 5 and 6 (Drinking Shot)
             cDisplay.innerText = "זמן לשוט! 🥃";
-            cDisplay.style.background = "#ffd166";
-            qDisplay.innerHTML = "<span class='shot-msg'>שותים שוט!</span><br>ובונוס: בחר/י שאלה מכל קטגוריה שבא לך.";
+            cDisplay.style.background = "#ffd166"; // Yellowish color for the shot event
+            qDisplay.innerHTML = "<span class='shot-msg'>שותים שוט! 🥃</span>";
         }
     }
 </script>
