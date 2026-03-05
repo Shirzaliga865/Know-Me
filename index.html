@@ -11,16 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS Variables - Boho Nature Palette */
+        /* CSS Variables - Calm Bottle Green Boho Palette */
         :root {
-            --bg: #F7F5F0; /* Soft warm sand/off-white */
-            --card: #FFFFFF; /* Pure white for cards to pop */
-            --text: #4A403A; /* Deep warm grey/brown instead of harsh black */
-            --text-light: #8A817C;
-            --shadow: rgba(74, 64, 58, 0.08); /* Soft organic shadow */
+            --bg: #2C4236;          /* Calm bottle green */
+            --card: #FDFBF7;        /* Soft off-white for cards to pop */
+            --text-dark: #1E2D26;   /* Dark green/gray for text on cards */
+            --text-light: #E8EDE9;  /* Light text for titles on dark bg */
+            --shadow: rgba(0, 0, 0, 0.2); 
             
             /* Dynamic Accent Color (Changes via JS) */
-            --accent: #C87971; /* Default Terracotta */
+            --accent: #C87971;      /* Default Terracotta */
             
             /* Category Colors */
             --color-couples: #C87971; /* Terracotta / Rose */
@@ -33,7 +33,7 @@
         body {
             font-family: 'Assistant', sans-serif;
             background-color: var(--bg);
-            color: var(--text);
+            color: var(--text-light);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -59,29 +59,30 @@
         }
 
         .menu-title {
-            color: var(--text);
-            font-size: 3rem;
+            color: var(--text-light);
+            font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 30px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
         .category-btn {
+            position: relative;
             width: 85%;
             max-width: 320px;
             padding: 18px 25px;
             border-radius: 20px;
             border: none;
             background: var(--card);
-            color: var(--text);
-            font-size: 1.3rem;
-            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1.4rem;
+            font-weight: 800;
             font-family: inherit;
             cursor: pointer;
             box-shadow: 0 8px 20px var(--shadow);
             transition: all 0.2s ease;
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Center the text */
             align-items: center;
         }
 
@@ -90,10 +91,12 @@
             box-shadow: 0 4px 10px var(--shadow);
         }
 
-        /* Little color indicators on menu buttons */
+        /* Little color indicators on menu buttons - Positioned to the side */
         .indicator {
-            width: 12px;
-            height: 12px;
+            position: absolute;
+            left: 20px; /* Aligns dot to the left side */
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
         }
 
@@ -110,6 +113,7 @@
         /* Shot Counter Components */
         .shot-counter {
             background: var(--card);
+            color: var(--text-dark);
             padding: 8px 15px;
             border-radius: 20px;
             width: 90%;
@@ -126,6 +130,15 @@
         .shot-display { font-size: 1.3rem; letter-spacing: 5px; }
         .shot-glass { opacity: 0.15; transition: all 0.3s ease; filter: grayscale(100%); }
         .shot-glass.filled { opacity: 1; filter: grayscale(0%); }
+
+        /* Styles for the new numeric group counter */
+        .shot-number-display {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-shot);
+            min-width: 50px;
+            text-align: center;
+        }
 
         .group-label {
             font-size: 0.85rem;
@@ -146,8 +159,25 @@
             gap: 20px;
         }
 
-        h1 { color: var(--text); margin: 0; font-size: 1.8rem; font-weight: 800; }
-        .dice-roll { font-size: 3.5rem; line-height: 1; color: var(--text); }
+        h1 { margin: 0; font-size: 2rem; font-weight: 800; letter-spacing: 1px; }
+        
+        .dice-roll { 
+            font-size: 4rem; 
+            line-height: 1; 
+            color: var(--text-light);
+            display: inline-block; /* Required for transform animation */
+        }
+        
+        /* Dice Spin Animation */
+        .spin-anim {
+            animation: rollDice 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes rollDice {
+            0% { transform: rotate(0deg) scale(0.8); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
         
         .category-badge { 
             padding: 6px 20px; 
@@ -155,15 +185,16 @@
             font-weight: 600; 
             background: var(--accent); 
             color: white;
-            font-size: 1rem; 
+            font-size: 1.1rem; 
             transition: background-color 0.3s ease;
         }
         
         .question-card {
             background: var(--card);
+            color: var(--text-dark);
             padding: 30px 25px;
             border-radius: 25px;
-            box-shadow: 0 10px 30px var(--shadow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             min-height: 160px;
             width: 90%;
             max-width: 350px;
@@ -183,17 +214,17 @@
             color: white;
             border: none;
             padding: 16px 45px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             border-radius: 50px;
             font-weight: 800;
             font-family: inherit;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .btn-main:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         .btn-back {
@@ -205,34 +236,38 @@
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
+            opacity: 0.8;
         }
 
         .btn-shot { 
             background: transparent; 
-            color: var(--text-light);
+            color: var(--text-dark);
             border: none; 
             width: 35px; 
             height: 35px; 
             font-weight: 800; 
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             cursor: pointer; 
         }
         
-        .shot-msg { color: var(--color-shot); font-weight: 800; font-size: 1.6rem; }
+        .shot-msg { color: var(--color-shot); font-weight: 800; font-size: 1.8rem; }
     </style>
 </head>
 <body>
 
     <div id="menuScreen">
         <div class="menu-title">Know Me</div>
+        
         <button class="category-btn" onclick="startGame('couples')">
-            <span>זוגות 🤍</span>
+            <span>זוגות ❤️</span>
             <span class="indicator" style="background: var(--color-couples);"></span>
         </button>
+        
         <button class="category-btn" onclick="startGame('friends')">
             <span>חברים 🍻</span>
             <span class="indicator" style="background: var(--color-friends);"></span>
         </button>
+        
         <button class="category-btn" onclick="startGame('family')">
             <span>הורה וילד 👨‍👧</span>
             <span class="indicator" style="background: var(--color-family);"></span>
@@ -261,10 +296,10 @@
             <button class="btn-shot" onclick="resetShots(1)">↺</button>
         </div>
 
-        <div class="shot-counter" id="groupShotCounter" style="display: none; justify-content: center; gap: 30px;">
+        <div class="shot-counter" id="groupShotCounter" style="display: none; justify-content: space-around;">
             <span class="group-label">סופר קבוצתי</span>
             <button class="btn-shot" onclick="addShot('group')">+</button>
-            <div id="shots-pgroup" class="shot-display"></div>
+            <div id="shots-pgroup" class="shot-number-display">0</div>
             <button class="btn-shot" onclick="resetShots('group')">↺</button>
         </div>
     </div>
@@ -316,6 +351,7 @@
     let currentMode = null;
     let usedQuestions = {}; 
     const diceIcons = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+    // Group score can now exceed 5 limit
     let scores = { 1: 0, 2: 0, group: 0 };
     const maxShots = 5;
 
@@ -369,7 +405,7 @@
         resetShots('group');
     }
 
-    // Update the visual representation of the shot glasses
+    // Update Visual Shots for Couples
     function updateShotUI(player) {
         const container = document.getElementById(`shots-p${player}`);
         let html = "";
@@ -380,9 +416,12 @@
         container.innerHTML = html;
     }
 
-    // Increment shot counter
+    // Increment shot counter (Numeric for group, visual for couples)
     function addShot(player) {
-        if (scores[player] < maxShots) {
+        if (player === 'group') {
+            scores[player]++;
+            document.getElementById('shots-pgroup').innerText = scores[player];
+        } else if (scores[player] < maxShots) {
             scores[player]++;
             updateShotUI(player);
         }
@@ -391,57 +430,73 @@
     // Reset shot counter
     function resetShots(player) {
         scores[player] = 0;
-        updateShotUI(player);
+        if (player === 'group') {
+            document.getElementById('shots-pgroup').innerText = "0";
+        } else {
+            updateShotUI(player);
+        }
     }
 
+    // Init UI
     updateShotUI(1);
     updateShotUI(2);
-    updateShotUI('group');
+    document.getElementById('shots-pgroup').innerText = "0";
 
     // Main Game Logic
     function play() {
+        // Trigger Dice Animation
+        const diceDisplay = document.getElementById('diceDisplay');
+        diceDisplay.classList.remove('spin-anim');
+        // Force reflow to restart animation
+        void diceDisplay.offsetWidth;
+        diceDisplay.classList.add('spin-anim');
+
         const roll = Math.floor(Math.random() * 6) + 1;
-        document.getElementById('diceDisplay').innerText = diceIcons[roll];
         
-        const qDisplay = document.getElementById('questionDisplay');
-        const cDisplay = document.getElementById('categoryDisplay');
+        // Wait for half the animation before changing text to make it feel natural
+        setTimeout(() => {
+            diceDisplay.innerText = diceIcons[roll];
+            
+            const qDisplay = document.getElementById('questionDisplay');
+            const cDisplay = document.getElementById('categoryDisplay');
 
-        if (currentMode === 'family') {
-            handleSingleArrayMode('family', questionsDB.family, qDisplay, cDisplay, "var(--color-family)");
-            return;
-        }
-
-        if (currentMode === 'friends') {
-            if (roll === 6) {
-                showShotScreen(qDisplay, cDisplay);
-            } else {
-                handleSingleArrayMode('friends', questionsDB.friends, qDisplay, cDisplay, "var(--color-friends)");
+            if (currentMode === 'family') {
+                handleSingleArrayMode('family', questionsDB.family, qDisplay, cDisplay, "var(--color-family)");
+                return;
             }
-            return;
-        }
 
-        if (currentMode === 'couples') {
-            if (roll >= 5) {
-                showShotScreen(qDisplay, cDisplay);
-            } else {
-                const subCategory = questionsDB.couples[roll];
-                
-                if (usedQuestions[roll].length === subCategory.questions.length) {
-                    usedQuestions[roll] = [];
+            if (currentMode === 'friends') {
+                if (roll === 6) {
+                    showShotScreen(qDisplay, cDisplay);
+                } else {
+                    handleSingleArrayMode('friends', questionsDB.friends, qDisplay, cDisplay, "var(--color-friends)");
                 }
-
-                let randomIndex;
-                do {
-                    randomIndex = Math.floor(Math.random() * subCategory.questions.length);
-                } while (usedQuestions[roll].includes(randomIndex));
-
-                usedQuestions[roll].push(randomIndex);
-                
-                cDisplay.innerText = subCategory.title;
-                cDisplay.style.background = "var(--color-couples)";
-                qDisplay.innerText = subCategory.questions[randomIndex];
+                return;
             }
-        }
+
+            if (currentMode === 'couples') {
+                if (roll >= 5) {
+                    showShotScreen(qDisplay, cDisplay);
+                } else {
+                    const subCategory = questionsDB.couples[roll];
+                    
+                    if (usedQuestions[roll].length === subCategory.questions.length) {
+                        usedQuestions[roll] = [];
+                    }
+
+                    let randomIndex;
+                    do {
+                        randomIndex = Math.floor(Math.random() * subCategory.questions.length);
+                    } while (usedQuestions[roll].includes(randomIndex));
+
+                    usedQuestions[roll].push(randomIndex);
+                    
+                    cDisplay.innerText = subCategory.title;
+                    cDisplay.style.background = "var(--color-couples)";
+                    qDisplay.innerText = subCategory.questions[randomIndex];
+                }
+            }
+        }, 250); // Updates exactly when the dice is flipped in the middle of the animation
     }
 
     // Shot screen helper
