@@ -11,9 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS Variables - Calm Bottle Green Boho Palette */
+        /* CSS Variables - Calm Boho Palette */
         :root {
-            --bg: #2C4236;          /* Calm bottle green */
+            /* Background Colors for different states */
+            --bg-default: #2C4236; /* Base calm bottle green for menu and other modes */
+            --bg-c1: #3A2E35;      /* Deep muted plum for Deep Connection */
+            --bg-c2: #4A4032;      /* Deep olive/sand for Time Travel */
+            --bg-c3: #2A3B40;      /* Deep slate teal for Our Connection */
+            --bg-c4: #47262A;      /* Dark wine/burgundy for Sexuality */
+            --bg-shot: #B86B25;    /* Rich amber/orange for Shots */
+
             --card: #FDFBF7;        /* Soft off-white for cards to pop */
             --text-dark: #1E2D26;   /* Dark green/gray for text on cards */
             --text-light: #E8EDE9;  /* Light text for titles on dark bg */
@@ -22,16 +29,16 @@
             /* Dynamic Accent Color (Changes via JS) */
             --accent: #C87971;      
             
-            /* Category Colors */
-            --color-couples: #C87971; /* Terracotta / Rose */
-            --color-friends: #D4A373; /* Warm Sand / Mustard */
-            --color-family: #8A9A86;  /* Sage Green */
-            --color-shot: #E2B464;    /* Soft Gold */
+            /* Category Accent Colors */
+            --color-couples: #C87971; 
+            --color-friends: #D4A373; 
+            --color-family: #8A9A86;  
+            --color-shot: #E2B464;    
         }
 
         body {
             font-family: 'Assistant', sans-serif;
-            background-color: var(--bg);
+            background-color: var(--bg-default);
             color: var(--text-light);
             display: flex;
             flex-direction: column;
@@ -44,6 +51,8 @@
             box-sizing: border-box;
             overflow: hidden;
             touch-action: manipulation;
+            /* Smooth transition for background color changes */
+            transition: background-color 0.6s ease;
         }
 
         /* Menu Screen Styles */
@@ -158,7 +167,6 @@
             height: 80px;
             background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             border-radius: 18px;
-            /* Creates the 3D realistic look */
             box-shadow: inset -3px -3px 6px rgba(0,0,0,0.1), 
                         inset 3px 3px 6px rgba(255,255,255,0.8), 
                         0 10px 20px rgba(0,0,0,0.3);
@@ -173,7 +181,6 @@
             background-color: #2a2a2a;
             border-radius: 50%;
             transform: translate(-50%, -50%);
-            /* Indented dot effect */
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 1px rgba(255,255,255,0.8);
         }
         
@@ -386,6 +393,9 @@
         const bottomShot = document.getElementById('bottomShotCounter');
         const groupShot = document.getElementById('groupShotCounter');
 
+        // Reset to default background when starting a game
+        document.body.style.backgroundColor = 'var(--bg-default)';
+
         if (mode === 'family') {
             document.documentElement.style.setProperty('--accent', 'var(--color-family)');
             categoryDisplay.innerText = questionsDB.family.title;
@@ -412,12 +422,16 @@
         }
 
         document.getElementById('questionDisplay').innerText = "מוכנים לגלות?";
-        renderDiceFace(6); // Reset dice visual
+        renderDiceFace(6); 
     }
 
     function showMenu() {
         document.getElementById('menuScreen').style.display = 'flex';
         document.getElementById('gameScreen').style.display = 'none';
+        
+        // Reset background back to default menu color
+        document.body.style.backgroundColor = 'var(--bg-default)';
+        
         resetShots(1);
         resetShots(2);
         resetShots('group');
@@ -474,14 +488,17 @@
             const cDisplay = document.getElementById('categoryDisplay');
 
             if (currentMode === 'family') {
+                document.body.style.backgroundColor = 'var(--bg-default)';
                 handleSingleArrayMode('family', questionsDB.family, qDisplay, cDisplay, "var(--color-family)");
                 return;
             }
 
             if (currentMode === 'friends') {
                 if (roll === 6) {
+                    document.body.style.backgroundColor = 'var(--bg-shot)';
                     showShotScreen(qDisplay, cDisplay);
                 } else {
+                    document.body.style.backgroundColor = 'var(--bg-default)';
                     handleSingleArrayMode('friends', questionsDB.friends, qDisplay, cDisplay, "var(--color-friends)");
                 }
                 return;
@@ -489,8 +506,12 @@
 
             if (currentMode === 'couples') {
                 if (roll >= 5) {
+                    document.body.style.backgroundColor = 'var(--bg-shot)';
                     showShotScreen(qDisplay, cDisplay);
                 } else {
+                    // Dynamically change background color based on the category rolled
+                    document.body.style.backgroundColor = `var(--bg-c${roll})`;
+                    
                     const subCategory = questionsDB.couples[roll];
                     
                     if (usedQuestions[roll].length === subCategory.questions.length) {
