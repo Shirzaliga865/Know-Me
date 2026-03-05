@@ -100,6 +100,13 @@
         .shot-glass { opacity: 0.2; transition: all 0.3s ease; }
         .shot-glass.filled { opacity: 1; filter: drop-shadow(0 0 5px var(--shot-color)); }
 
+        .group-label {
+            font-size: 0.8rem;
+            color: #aaa;
+            position: absolute;
+            margin-top: -35px;
+        }
+
         /* Game Area Elements */
         .container {
             width: 100%;
@@ -155,7 +162,7 @@
             cursor: pointer;
         }
 
-        .btn-shot { background: var(--shot-color); border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; }
+        .btn-shot { background: var(--shot-color); border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; color: #1a1a1a; }
         .shot-msg { color: var(--shot-color); font-weight: bold; font-size: 1.5rem; }
     </style>
 </head>
@@ -188,6 +195,13 @@
             <button class="btn-shot" onclick="addShot(1)">+</button>
             <div id="shots-p1" class="shot-display"></div>
             <button class="btn-shot" onclick="resetShots(1)">↺</button>
+        </div>
+
+        <div class="shot-counter" id="groupShotCounter" style="display: none; justify-content: center; gap: 20px;">
+            <span class="group-label">סופר קבוצתי</span>
+            <button class="btn-shot" onclick="addShot('group')">+</button>
+            <div id="shots-pgroup" class="shot-display"></div>
+            <button class="btn-shot" onclick="resetShots('group')">↺</button>
         </div>
     </div>
 
@@ -238,7 +252,8 @@
     let currentMode = null;
     let usedQuestions = {}; // Will be initialized dynamically based on the selected mode
     const diceIcons = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-    let scores = { 1: 0, 2: 0 };
+    // Added 'group' for the Friends mode general counter
+    let scores = { 1: 0, 2: 0, group: 0 };
     const maxShots = 5;
 
     // Transition from Menu to Game Screen
@@ -253,28 +268,36 @@
         const categoryDisplay = document.getElementById('categoryDisplay');
         const topShot = document.getElementById('topShotCounter');
         const bottomShot = document.getElementById('bottomShotCounter');
+        const groupShot = document.getElementById('groupShotCounter');
 
         if (mode === 'family') {
             categoryDisplay.innerText = questionsDB.family.title;
             categoryDisplay.style.background = "#4da6ff"; // Blueish for family
-            // Hide shot counters for Family mode
+            // Hide all shot counters for Family mode
             topShot.style.display = 'none';
             bottomShot.style.display = 'none';
-            // Initialize memory for this array
+            groupShot.style.display = 'none';
+            
             usedQuestions.family = [];
+            
         } else if (mode === 'friends') {
             categoryDisplay.innerText = questionsDB.friends.title;
             categoryDisplay.style.background = "#ff4d6d";
-            // Show shot counters
-            topShot.style.display = 'flex';
-            bottomShot.style.display = 'flex';
+            // Show only the general group counter
+            topShot.style.display = 'none';
+            bottomShot.style.display = 'none';
+            groupShot.style.display = 'flex';
+            
             usedQuestions.friends = [];
+            
         } else if (mode === 'couples') {
             categoryDisplay.innerText = "משחק זוגי";
             categoryDisplay.style.background = "#ff4d6d";
-            // Show shot counters
+            // Show player 1 and 2 counters
             topShot.style.display = 'flex';
             bottomShot.style.display = 'flex';
+            groupShot.style.display = 'none';
+            
             // Initialize memory for the 4 sub-categories
             usedQuestions = { 1: [], 2: [], 3: [], 4: [] };
         }
@@ -286,9 +309,10 @@
     function showMenu() {
         document.getElementById('menuScreen').style.display = 'flex';
         document.getElementById('gameScreen').style.display = 'none';
-        // Reset shots when returning to menu
+        // Reset all shots when returning to menu
         resetShots(1);
         resetShots(2);
+        resetShots('group');
     }
 
     // Update the visual representation of the shot glasses
@@ -302,7 +326,7 @@
         container.innerHTML = html;
     }
 
-    // Increment shot counter for a player
+    // Increment shot counter for a player or group
     function addShot(player) {
         if (scores[player] < maxShots) {
             scores[player]++;
@@ -310,7 +334,7 @@
         }
     }
 
-    // Reset shot counter for a player
+    // Reset shot counter for a player or group
     function resetShots(player) {
         scores[player] = 0;
         updateShotUI(player);
@@ -319,6 +343,7 @@
     // Initial render of shot counters
     updateShotUI(1);
     updateShotUI(2);
+    updateShotUI('group');
 
     // Main Game Logic: Triggered when "Roll Dice" button is clicked
     function play() {
